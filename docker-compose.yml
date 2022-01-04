@@ -1,0 +1,47 @@
+version: '3.8'
+services:
+  users:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      DB_HOST: users_db
+      DB_DATABASE: users_db
+      DB_USERNAME: root
+      DB_PASSWORD: strongr324!w.LdOOfword
+    command: 'php artisan serve'    
+    volumes:
+      - .:/var/www/app
+    ports:
+      - 8001:8000
+    depends_on:
+      - users_db
+    networks:
+      - app
+
+  users_db:
+    image: mysql:5.7.22
+    environment:
+      MYSQL_DATABASE: users_db
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: strongr324!w.LdOOfword
+      MYSQL_ROOT_PASSWORD: strongr324!w.LdOOfword
+    volumes:
+      - ./storage/dbdata:/var/lib/mysql
+    ports:
+      - 33068:3306
+    networks:
+      - app
+
+  phpmyadmin:
+    image: phpmyadmin
+    restart: always
+    ports:
+      - 8100:80
+    environment:
+      - PMA_HOST=users_db
+    networks:
+      - app
+
+networks:
+  app: null
