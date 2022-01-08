@@ -9,7 +9,7 @@ services:
       DB_DATABASE: users_db
       DB_USERNAME: root
       DB_PASSWORD: strongr324!w.LdOOfword
-    command: 'php artisan serve'    
+    command: 'php artisan serve --host=0.0.0.0'    
     volumes:
       - .:/var/www/app
     ports:
@@ -17,7 +17,7 @@ services:
     depends_on:
       - users_db
     networks:
-      - app
+      - users_app
 
   users_db:
     image: mysql:5.7.22
@@ -31,7 +31,7 @@ services:
     ports:
       - 33068:3306
     networks:
-      - app
+      - users_app
 
   phpmyadmin:
     image: phpmyadmin
@@ -41,7 +41,7 @@ services:
     environment:
       - PMA_HOST=users_db
     networks:
-      - app
+      - users_app
 
 networks:
-  app: null
+  users_app: null

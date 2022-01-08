@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -14,6 +16,20 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+Route::post('login', [AuthController::class, 'login']);
+Route::post('register', [AuthController::class, 'register']);
+
+// Common
+Route::group([
+    'middleware' => 'auth:api',
+], function () {
+    Route::get('user', [AuthController::class, 'user']);
+    Route::post('logout', [AuthController::class, 'logout']);
+    Route::apiResource('users', UserController::class);
+    
+    Route::put('users/info', [AuthController::class, 'updateInfo']);
+    Route::put('users/password', [AuthController::class, 'updatePassword']);
+
+    Route::get('admin', [AuthController::class, 'authenticated'])->middleware('scope:admin');
+    Route::get('influencer', [AuthController::class, 'authenticated'])->middleware('scope:influencer');
 });
